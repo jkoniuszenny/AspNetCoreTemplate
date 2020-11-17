@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infrastructure.Extensions
+namespace Core.Repositories.Interfaces
 {
-    class TempDataExtensions
+    //Marker
+    public interface IRepository
     {
     }
 }

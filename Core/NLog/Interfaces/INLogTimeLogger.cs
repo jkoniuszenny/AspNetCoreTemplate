@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Core.NLog.Interfaces
 {
-    interface INLogTimeLogger
+    public interface INLogTimeLogger
     {
+        void LogWarn(string message);
     }
 }
