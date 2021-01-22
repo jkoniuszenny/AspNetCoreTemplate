@@ -17,7 +17,9 @@ namespace Infrastructure.Database
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_settings.ConnectionString);
+            optionsBuilder.EnableDetailedErrors(true);
+            optionsBuilder.UseSqlServer(_settings.ConnectionString, s => s.CommandTimeout(60));
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
     }
 }

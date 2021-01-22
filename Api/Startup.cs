@@ -5,9 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using NLog;
 using NLog.Extensions.Logging;
 using NLog.Config;
@@ -17,10 +14,13 @@ using Infrastructure.Database;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Infrastructure.Settings;
-using Api.Extensions;
 using Core.NLog;
 using Infrastructure.IoC;
 using Core.NLog.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Infrastructure.Frameworks;
 
 namespace Api
 {
@@ -43,7 +43,24 @@ namespace Api
         {
             services.AddCors();
 
-            services.AddRouting();
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+               .AddJwtBearer(options =>
+               {
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = true,
+                       ValidateAudience = true,
+                       ValidateLifetime = true,
+                       ValidateIssuerSigningKey = true,
+                       ValidIssuer = Configuration["Token:IssuerKey"],
+                       ValidAudience = Configuration["Token:AudienceKey"],
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:SecretKey"]))
+                   };
+               });
 
             services.AddMvc().AddJsonOptions(o =>
             {
@@ -52,9 +69,12 @@ namespace Api
                 o.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             });
 
-            services.AddControllers();
-
             services.AddDbContext<DatabaseContext>();
+
+            services.AddHttpContextAccessor();
+
+            services.AddRouting();
+            services.AddControllers();
 
             var builder = new ContainerBuilder();
 
@@ -100,8 +120,6 @@ namespace Api
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseAuthentication();
-
             app.ConfigureExceptionHandler();
 
             var responseTimeSettings = app.ApplicationServices.GetService<ResponseTimeSettings>();
@@ -112,11 +130,10 @@ namespace Api
             }
             app.UseRouting();
 
-            app.Use(async (context, next) => {
-                context.Request.EnableBuffering();
-                await next().ConfigureAwait(false);
-            });
+            app.UseAuthentication();
+            app.UseAuthorization();
 
+            app.ConfigureRequest();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
