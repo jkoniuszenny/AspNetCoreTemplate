@@ -21,7 +21,7 @@ using Core.NLog.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Infrastructure.Frameworks;
+using Api.Middlewares;
 
 namespace Api
 {
@@ -131,7 +131,6 @@ namespace Api
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.ConfigureRequest();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
