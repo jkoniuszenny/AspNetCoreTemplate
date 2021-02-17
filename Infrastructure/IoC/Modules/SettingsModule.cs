@@ -21,6 +21,8 @@ namespace Infrastructure.IoC.Modules
         {
             builder.RegisterInstance(_configuration.GetSettings<DatabaseSettings>())
                     .SingleInstance();
+            builder.RegisterInstance(_configuration.GetSettings<ResponseTimeSettings>())
+                    .SingleInstance();
         }
     }
 }
