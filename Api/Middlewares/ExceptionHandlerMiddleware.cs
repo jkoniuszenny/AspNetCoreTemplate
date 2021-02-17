@@ -7,11 +7,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Core.NLog.Interfaces;
 
-<<<<<<< HEAD:Api/Middlewares/ExceptionHandlerMiddleware.cs
 namespace Api.Middlewares
-=======
-namespace Infrastructure.Frameworks
->>>>>>> master:Infrastructure/Frameworks/ExceptionHandlerMiddleware.cs
 {
     public class ExceptionHandlerMiddleware
     {

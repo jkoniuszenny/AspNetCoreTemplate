@@ -7,11 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-<<<<<<< HEAD:Api/Middlewares/ResponseTimeLoggerMiddleware.cs
 namespace Api.Middlewares
-=======
-namespace Infrastructure.Frameworks
->>>>>>> master:Infrastructure/Frameworks/ResponseTimeLoggerMiddleware.cs
 {
     public class ResponseTimeLoggerMiddleware
     {
