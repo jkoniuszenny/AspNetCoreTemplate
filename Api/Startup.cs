@@ -14,6 +14,7 @@ using Infrastructure.Database;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Infrastructure.Settings;
+using Api.Middlewares;
 using Core.NLog;
 using Infrastructure.IoC;
 using Core.NLog.Interfaces;
@@ -79,13 +80,9 @@ namespace Api
             var builder = new ContainerBuilder();
 
             builder.Populate(services);
+
             builder.RegisterModule(new ContainerModule(Configuration));
-            builder.RegisterType<NLogLogger>()
-                                .As<INLogLogger>()
-                                .SingleInstance();
-            builder.RegisterType<NLogTimeLogger>()
-                    .As<INLogTimeLogger>()
-                    .SingleInstance();
+
             ApplicationContainer = builder.Build();
 
             return new AutofacServiceProvider(ApplicationContainer);
@@ -130,6 +127,7 @@ namespace Api
             }
             app.UseRouting();
 
+            app.ConfigureBuffer();
             app.UseAuthentication();
             app.UseAuthorization();
 
