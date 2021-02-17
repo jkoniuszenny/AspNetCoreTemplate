@@ -22,6 +22,7 @@ namespace Infrastructure.IoC
             builder.RegisterInstance(AutoMapperConfig.Initialize()).SingleInstance();
             builder.RegisterModule<RepositoryModule>();
             builder.RegisterModule<ServiceModule>();
+            builder.RegisterModule<NLogModule>();
             builder.RegisterModule(new SettingsModule(_configuration));
         }
     }

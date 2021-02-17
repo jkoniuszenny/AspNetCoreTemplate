@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Extensions
+namespace Api.Middlewares
 {
     public static class Extensions
     {
@@ -15,6 +15,10 @@ namespace Api.Extensions
         public static IApplicationBuilder ConfigureResponseTime(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware(typeof(ResponseTimeLoggerMiddleware));
+        }
+        public static IApplicationBuilder ConfigureBuffer(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware(typeof(BufferMiddleware));
         }
     }
 }

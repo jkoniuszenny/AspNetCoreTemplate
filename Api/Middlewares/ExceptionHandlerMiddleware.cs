@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Core.NLog.Interfaces;
 
-namespace Api.Extensions
+namespace Api.Middlewares
 {
     public class ExceptionHandlerMiddleware
     {
