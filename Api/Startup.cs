@@ -44,6 +44,8 @@ namespace Api
         {
             services.AddCors();
 
+            services.AddRazorPages();
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -76,6 +78,8 @@ namespace Api
 
             services.AddRouting();
             services.AddControllers();
+
+            services.AddSwaggerGen();
 
             var builder = new ContainerBuilder();
 
@@ -111,6 +115,7 @@ namespace Api
                 LogManager.Configuration.Install(new InstallationContext());
             }
 
+            app.UseStaticFiles();
 
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
@@ -131,9 +136,16 @@ namespace Api
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Json Send Api");
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }

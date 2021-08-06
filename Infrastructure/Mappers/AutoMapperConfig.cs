@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
+using Infrastructure.DTO;
 
 namespace Infrastructure.Mappers
 {
@@ -10,7 +11,8 @@ namespace Infrastructure.Mappers
         public static IMapper Initialize()
             => new MapperConfiguration(configuration =>
             {
-                
+
+
             })
             .CreateMapper();
     }
