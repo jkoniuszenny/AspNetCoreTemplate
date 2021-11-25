@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using EFCore.BulkExtensions;
+using Infrastructure.Extensions;
 
 namespace Infrastructure.Repositories
 {
@@ -21,6 +23,37 @@ namespace Infrastructure.Repositories
             _settings = settings;
         }
 
+        /// <summary>
+        ///  Insert dla sporej liczby danych, typu Bulk, pod spodem tmp table i merge
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task InsertBulk<T>(List<T> entities) where T : class
+        {
+            try
+            {
+                await _databaseContext.BulkInsertAsync(entities);
+                await _databaseContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                throw new DbUpdateConcurrencyException("Dane nie zostały zapisane. Ktoś w międzyczasie wykonał ich zmianę. Odśwież i spróbuj ponownie", ex);
+            }
+            finally
+            {
+                Parallel.ForEach(entities, p =>
+                {
+                    _databaseContext.Entry(p).State = EntityState.Detached;
+                });
+            }
+        }
+
+        /// <summary>
+        /// Insert normalny
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
         public async Task Insert(IEnumerable<object> entities)
         {
             try
@@ -41,7 +74,38 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task Update(IEnumerable<object> entities)
+        /// <summary>
+        /// Update dla sporej liczby danych, typu Bulk, pod spodem tmp table i merge
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task UpdateBulk<T>(List<T> entities) where T : class
+        {
+            try
+            {
+                await _databaseContext.BulkUpdateAsync(entities);
+                await _databaseContext.SaveChangesAsync();
+            }
+            catch
+            {
+            }
+            finally
+            {
+                Parallel.ForEach(entities, p =>
+                {
+                    _databaseContext.Entry(p).State = EntityState.Detached;
+                });
+            }
+        }
+
+        /// <summary>
+        /// Update normalny
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task Update(List<object> entities)
         {
             try
             {
