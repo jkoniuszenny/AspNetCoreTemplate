@@ -23,10 +23,6 @@ namespace Infrastructure.IoC.Modules
                     .SingleInstance();
             builder.RegisterInstance(_configuration.GetSettings<ResponseTimeSettings>())
                     .SingleInstance();
-            builder.RegisterInstance(_configuration.GetSettings<ApiSettings>())
-                    .SingleInstance();
-            builder.RegisterInstance(_configuration.GetSettings<SendGridSettings>())
-                    .SingleInstance();
         }
     }
 }

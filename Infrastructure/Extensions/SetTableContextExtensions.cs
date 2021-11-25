@@ -10,7 +10,11 @@ namespace Infrastructure.Extensions
     {
         public static IQueryable<object> Set(this DbContext _context, Type t)
         {
-            return (IQueryable<object>)_context.GetType().GetMethod("Set").MakeGenericMethod(t).Invoke(_context, null);
+            return (IQueryable<object>)_context.GetType()
+            .GetMethods()
+            .First(p => p.Name == "Set" && p.ContainsGenericParameters)
+            .MakeGenericMethod(t)
+            .Invoke(_context, null);
         }
     }
 }

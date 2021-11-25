@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -8,6 +9,89 @@ namespace Infrastructure.Extensions
 {
     public static class MethodExtensions
     {
+        public static string GetValueByStringNumber(object item)
+        {
+            return item != null ? item.ToString().Replace(",", ".") : "null";
+        }
+
+        public static string GetValueByString(object item)
+        {
+            return item != null ? $"'{item.ToString()}'" : "null";
+        }
+
+        public static int ToInt32(this string str)
+        {
+            int result = 0;
+
+            if (str.Length > 0)
+                int.TryParse(str, out result);
+
+            return result;
+        }
+
+        public static DateTime ToDateTime(this string str)
+        {
+            DateTime result = DateTime.MinValue;
+
+            if (str.Length > 0)
+                DateTime.TryParse(str, out result);
+
+            return result;
+        }
+
+        public static bool ToBoolean(this string str)
+        {
+            bool result = false;
+
+            if (str.Length > 0)
+                Boolean.TryParse(str, out result);
+
+            return result;
+        }
+
+        public static string ToTitleCase(this string title)
+        {
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(title.ToLower());
+        }
+
+        public static decimal TruncateDecimal(decimal d, byte decimals)
+        {
+            decimal r = Math.Round(d, decimals);
+
+            if (d > 0 && r > d)
+            {
+                return r - new decimal(1, 0, 0, false, decimals);
+            }
+            else if (d < 0 && r < d)
+            {
+                return r + new decimal(1, 0, 0, false, decimals);
+            }
+
+            return r;
+        }
+
+        public static decimal RoundToMultiplyValue(decimal d, decimal multiply)
+        {
+            var a = ((int)(d / multiply)) * multiply;
+            return a;
+
+            //decimal rest = d % 1;
+            //decimal total = (int)d;
+
+            //return (multiply > rest ? 0 : multiply) + total;
+        }
+
+        public static int GetAge(DateTime birthDate, DateTime actual)
+        {
+            DateTime n = actual;
+            int age = n.Year - birthDate.Year;
+
+            if (n.Month < birthDate.Month || (n.Month == birthDate.Month && n.Day < birthDate.Day))
+                age--;
+
+            return age;
+        }
+
         /// <summary>
         /// Zwraca ostatni dzień miesiąca z podanej daty
         /// </summary>
@@ -25,6 +109,24 @@ namespace Infrastructure.Extensions
         public static DateTime GetFirstDayOfMonth(this DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, 1);
+        }
+
+        /// <summary>
+        /// Zwraca pierwszy dzień roku wskazanej daty.
+        /// </summary>
+        /// <param name="dateTime">Data.</param>
+        public static DateTime GetFirstDayOfYear(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, 1, 1);
+        }
+
+        /// <summary>
+        /// Zwraca ostatni dzień roku wskazanej daty.
+        /// </summary>
+        /// <param name="dateTime">Data.</param>
+        public static DateTime GetLastDayOfYear(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, 12, 31);
         }
 
         /// <summary>
@@ -192,6 +294,47 @@ namespace Infrastructure.Extensions
             {
                 return ret;
             }
+        }
+
+
+        public static string GetStatusDescription(string source)
+        {
+            var desc = "";
+            switch (source)
+            {
+                case "W":
+                    desc = "Wykonane";
+                    break;
+                case "N":
+                    desc = "Niewykonane";
+                    break;
+                case "P":
+                    desc = "Przeniesione";
+                    break;
+                default:
+                    break;
+            }
+
+            return desc;
+        }
+
+        public static string GetTypeDescription(string source)
+        {
+            var desc = "";
+            switch (source)
+            {
+                case "I":
+                    desc = "Instruktaż na stanowisko";
+                    break;
+                case "O":
+                    desc = "Ogólny";
+                    break;
+                default:
+                    desc = source;
+                    break;
+            }
+
+            return desc;
         }
 
     }

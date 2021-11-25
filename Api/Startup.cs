@@ -21,7 +21,6 @@ using Core.NLog.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Api.Middlewares;
 
 namespace Api
 {

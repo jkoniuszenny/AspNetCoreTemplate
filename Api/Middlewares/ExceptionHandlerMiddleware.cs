@@ -44,11 +44,17 @@ namespace Api.Middlewares
                 case Exception e when exceptionType == typeof(UnauthorizedAccessException):
                     statusCode = HttpStatusCode.Unauthorized;
                     break;
-
+                case Exception e when exceptionType == typeof(ArgumentException):
+                    statusCode = HttpStatusCode.BadRequest;
+                    break;
+                case Exception e when exceptionType == typeof(InvalidOperationException):
+                    statusCode = HttpStatusCode.NotFound;
+                    break;
                 case Exception e when exceptionType == typeof(Exception):
                     statusCode = HttpStatusCode.InternalServerError;
                     break;
             }
+
             _loggerManager.LogError(exception.Message, exception); 
             var response = new { code = errorCode, message = exception.Message };
             var payload = JsonSerializer.Serialize(response);

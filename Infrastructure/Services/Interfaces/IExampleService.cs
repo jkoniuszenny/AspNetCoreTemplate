@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services.Interfaces
 {
-    public interface IFailureService : IService
+    public interface IExampleService : IService
     {
-        Task SaveErrrorToTable(string json, string errorMessage);
+        Task Example();
     }
 }

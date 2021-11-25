@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
-using Infrastructure.DTO;
 
 namespace Infrastructure.Mappers
 {

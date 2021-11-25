@@ -1,5 +1,4 @@
-﻿using Core.Models.Domain;
-using Infrastructure.Settings;
+﻿using Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
@@ -11,14 +10,23 @@ namespace Infrastructure.Database
     public class DatabaseContext : DbContext
     {
         private readonly DatabaseSettings _settings;
+        private readonly DbContextOptions<DatabaseContext> _options;
+
+
+        public DbContextOptions<DatabaseContext> Options
+        {
+            get
+            {
+                return _options;
+            }
+        }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> dbContextOptions, DatabaseSettings settings) : base(dbContextOptions)
         {
             _settings = settings;
+            _options = dbContextOptions;
         }
 
-        public DbSet<AwardsAtlantaPostFailures> AwardsAtlantaPostFailures { get; set; }
-        public DbSet<AwardsAtlantaOrders> AwardsAtlantaOrders { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
