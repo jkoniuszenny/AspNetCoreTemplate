@@ -19,10 +19,12 @@ namespace Infrastructure.Extensions
 
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
-            foreach (T element in source)
+            source.All(a =>
             {
-                action(element);
-            }
+                action(a);
+                return true;
+            });
+
             return source;
         }
 

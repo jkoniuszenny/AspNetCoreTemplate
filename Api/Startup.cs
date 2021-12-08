@@ -14,7 +14,7 @@ using Infrastructure.Database;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Infrastructure.Settings;
-using Api.Middlewares;
+using Infrastructure.Middlewares;
 using Core.NLog;
 using Infrastructure.IoC;
 using Core.NLog.Interfaces;
@@ -27,7 +27,8 @@ namespace Api
     public class Startup
     {
         public IConfigurationRoot Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
+        //public IContainer ApplicationContainer { get; private set; }
+        public ILifetimeScope AutofacContainer { get; private set; }
 
         public Startup(IWebHostEnvironment env)
         {
@@ -39,7 +40,7 @@ namespace Api
             Configuration = builder.Build();
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
 
@@ -80,20 +81,17 @@ namespace Api
 
             services.AddSwaggerGen();
 
-            var builder = new ContainerBuilder();
 
-            builder.Populate(services);
-
-            builder.RegisterModule(new ContainerModule(Configuration));
-
-            ApplicationContainer = builder.Build();
-
-            return new AutofacServiceProvider(ApplicationContainer);
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        [Obsolete]
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new ContainerModule(Configuration));
+        }
+
+
+     
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
@@ -105,16 +103,6 @@ namespace Api
                 app.UseHsts();
             }
 
-            string nlogFilePath = "nlog" + env.EnvironmentName + ".config";
-
-            if (File.Exists(nlogFilePath))
-            {
-                loggerFactory.AddNLog();
-                loggerFactory.ConfigureNLog(nlogFilePath);
-                LogManager.Configuration.Install(new InstallationContext());
-            }
-
-            app.UseStaticFiles();
 
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
@@ -144,7 +132,6 @@ namespace Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapRazorPages();
             });
         }
     }
