@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -74,11 +74,6 @@ namespace Infrastructure.Extensions
         {
             var a = ((int)(d / multiply)) * multiply;
             return a;
-
-            //decimal rest = d % 1;
-            //decimal total = (int)d;
-
-            //return (multiply > rest ? 0 : multiply) + total;
         }
 
         public static int GetAge(DateTime birthDate, DateTime actual)
@@ -294,47 +289,6 @@ namespace Infrastructure.Extensions
             {
                 return ret;
             }
-        }
-
-
-        public static string GetStatusDescription(string source)
-        {
-            var desc = "";
-            switch (source)
-            {
-                case "W":
-                    desc = "Wykonane";
-                    break;
-                case "N":
-                    desc = "Niewykonane";
-                    break;
-                case "P":
-                    desc = "Przeniesione";
-                    break;
-                default:
-                    break;
-            }
-
-            return desc;
-        }
-
-        public static string GetTypeDescription(string source)
-        {
-            var desc = "";
-            switch (source)
-            {
-                case "I":
-                    desc = "Instruktaż na stanowisko";
-                    break;
-                case "O":
-                    desc = "Ogólny";
-                    break;
-                default:
-                    desc = source;
-                    break;
-            }
-
-            return desc;
         }
 
     }

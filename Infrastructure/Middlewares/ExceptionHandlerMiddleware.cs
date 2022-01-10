@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Core.NLog.Interfaces;
-using Infrastructure.DTO.GlobalReposneModel;
 
 namespace Infrastructure.Middlewares
 {
